@@ -1,1 +1,1 @@
-web: gunicorn saread.wsgi --log-file
+web: gunicorn saread.wsgi --log-file -
