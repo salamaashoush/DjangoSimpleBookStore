@@ -1,5 +1,5 @@
 configparser==3.5.0
--e git://github.com/django/django.git@ebaa08b3ae949004aa553853f448051b61b15075#egg=Django
+Django==1.11
 django-cors-headers==2.0.2
 djangorestframework==3.6.2
 djangorestframework-jwt==1.10.0
