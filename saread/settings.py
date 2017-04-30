@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'saread.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'saread',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '127.0.0.1'
+        'NAME': 'heroku_726a09b7c8cd679',
+        'USER': 'b1da32eca4c846',
+        'PASSWORD': '505d7e5a',
+        'HOST': 'us-cdbr-iron-east-03.cleardb.net'
     }
 }
 
@@ -153,21 +153,3 @@ STATIC_URL = '/static/'
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static'),
 # )
-import sys
-
-try:
-
-    # Check to make sure DATABASES is set in settings.py file.
-    # If not default to {}
-
-    if 'DATABASES' not in locals():
-        DATABASES = {}
-
-    if 'DATABASE_URL' in os.environ:
-        import dj_database_url
-
-        # Uses DATABASE_URL environment variable if available. Otherwise, the default
-        DATABASES['default'] = dj_database_url.config(
-            default='mysql://b1da32eca4c846:505d7e5a@us-cdbr-iron-east-03.cleardb.net/heroku_726a09b7c8cd679?reconnect=true')
-except Exception:
-    print('Unexpected error:', sys.exc_info())
