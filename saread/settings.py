@@ -153,3 +153,18 @@ STATIC_URL = '/static/'
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static'),
 # )
+
+try:
+
+    # Check to make sure DATABASES is set in settings.py file.
+    # If not default to {}
+
+    if 'DATABASES' not in locals():
+        DATABASES = {}
+
+    if 'DATABASE_URL' in os.environ:
+        import dj_database_url
+        DATABASES['default'] = dj_database_url.config()
+
+except Exception:
+    print('Unexpected error:', sys.exc_info())
