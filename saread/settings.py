@@ -26,7 +26,7 @@ SECRET_KEY = 'tykd4b3-tr&##n4qjx9^(rl01qy&=-_crc11ob0ccz5us2l4tr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['djangobooks.herokuapp.com',]
+ALLOWED_HOSTS = ['djangobooks.herokuapp.com', ]
 
 # Application definition
 
@@ -153,6 +153,7 @@ STATIC_URL = '/static/'
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static'),
 # )
+import sys
 
 try:
 
@@ -164,7 +165,9 @@ try:
 
     if 'DATABASE_URL' in os.environ:
         import dj_database_url
-        DATABASES['default'] = dj_database_url.config()
 
+        # Uses DATABASE_URL environment variable if available. Otherwise, the default
+        DATABASES['default'] = dj_database_url.config(
+            default='mysql://b1da32eca4c846:505d7e5a@us-cdbr-iron-east-03.cleardb.net/heroku_726a09b7c8cd679?reconnect=true')
 except Exception:
     print('Unexpected error:', sys.exc_info())
