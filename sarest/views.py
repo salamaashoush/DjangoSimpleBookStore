@@ -5,7 +5,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from sarest.models import Book, Category, Author
+from sarest.models import Book, Category, Author, Reader
 from sarest.serializers import UserSerializer, BookSerializer, CategorySerializer, AuthorSerializer, ReaderSerializer
 
 
@@ -56,7 +56,14 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['post'])
     def subscribe(self, request, pk=None):
-        pass
+        category = Category.objects.get(pk=pk)
+        try:
+            s = category.subscribers.get(id=request.user.id)
+        except Exception:
+            category.subscribers.add(request.user.id)
+            return Response({'message': 'subscribed successfully'}, status=status.HTTP_201_CREATED)
+        if s:
+            return Response({'message': 'Already subscribed'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
@@ -66,7 +73,14 @@ class AuthorViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['post'])
     def follow(self, request, pk=None):
-        pass
+        author = Author.objects.get(pk=pk)
+        try:
+            author = author.followers.get(id=request.user.id)
+        except Exception:
+            author.followers.add(request.user.id)
+            return Response({'message': 'followed successfully'}, status=status.HTTP_201_CREATED)
+        if author:
+            return Response({'message': 'Already following'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -75,21 +89,14 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
 
     @detail_route(methods=['post'])
-    def rate(self, request, pk=None):
-        book = self.get_object()
-        value = request.data['value']
-        data = {"user": request.user.pk, "book": book.pk, "value": value}
-        model_serializer = ReaderSerializer(data=data)
-        if model_serializer.is_valid():
-            model_serializer.save()
-            return Response(model_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(model_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @detail_route(methods=['post'])
     def read(self, request, pk=None):
-        pass
+        book = Book.objects.get(pk=pk)
+        user = User.objects.get(pk=request.user.id)
+        reader = Reader.objects.filter(user=user, book=book)
+        if reader:
+            return Response({'message': 'You already reed'}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            Reader.objects.create(user=user, book=book, value=request.data['value'],reed=True)
+            return Response({'message': 'Added successfully'}, status=status.HTTP_201_CREATED)
 
-# class UserBooksViewSet(viewsets.ModelViewSet):
-#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-#     queryset = UserBooks.objects.all()
-#     serializer_class = UserBooksSerializer
+

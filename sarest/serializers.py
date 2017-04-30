@@ -57,24 +57,25 @@ class ReaderSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
     cover = Base64ImageField(max_length=None, use_url=False)
-    rating = serializers.Field()
 
     class Meta:
+        depth = 1
         model = Book
-        fields = ('id', 'title', 'description', 'author', 'publish_date', 'category', 'cover', 'rating')
+        fields = ('id', 'title', 'description', 'author', 'publish_date', 'category', 'cover','readers')
 
 
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(allow_blank=False, write_only=True)
 
+    # books = serializers.PrimaryKeyRelatedField(queryset=reader_set.,source='book_set')
     class Meta:
+        depth = 1
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password', 'confirm_password', 'is_staff', 'is_superuser']
+        fields = ['first_name', 'last_name', 'email', 'password', 'confirm_password', 'is_staff', 'is_superuser',
+                  ]
         write_only_fields = ['username', ]
         extra_kwargs = {"password": {"write_only": True},
-                        "is_staff": {"read_only": True},
                         "is_superuser": {"read_only": True}}
 
     def validate(self, data):
@@ -113,11 +114,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    books = BookSerializer()
+    books = BookSerializer(many=True, read_only=True)
+    subscribers = UserSerializer(read_only=True, many=True)
 
     class Meta:
+        depth = 0
         model = Category
-        fields = ('name', 'description', 'books')
+        fields = ('id', 'name', 'description', 'books', 'subscribers')
 
 
 class AuthorSerializer(serializers.ModelSerializer):
