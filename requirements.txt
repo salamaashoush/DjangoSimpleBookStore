@@ -1,6 +1,6 @@
 configparser==3.5.0
 dj-database-url==0.4.2
-Django=1.11
+Django==1.11
 django-cors-headers==2.0.2
 djangorestframework==3.6.2
 djangorestframework-jwt==1.10.0
