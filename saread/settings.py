@@ -26,7 +26,7 @@ SECRET_KEY = 'tykd4b3-tr&##n4qjx9^(rl01qy&=-_crc11ob0ccz5us2l4tr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['djangobooks.herokuapp.com', ]
+ALLOWED_HOSTS = ['djangobooks.herokuapp.com','127.0.0.1']
 
 # Application definition
 
@@ -78,6 +78,15 @@ WSGI_APPLICATION = 'saread.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'saread',
+#         'USER': 'root',
+#         'PASSWORD': 'root',
+#         'HOST': '127.0.0.1'
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -146,10 +155,15 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
